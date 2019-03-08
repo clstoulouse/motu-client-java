@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>cls-project-config</artifactId>
+		<groupId>cls.commons</groupId>
+		<version>1.2.00</version>
+	</parent>
+
+	<groupId>cls.atoll.motu.client</groupId>
+	<artifactId>motuclient-java-parent</artifactId>
+	<name>Motuclient Java Parent</name>
+	<version>1.0.00-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<description>Motu is a high efficient and robust Web Server which fills the gap between heterogeneous Data Providers to End Users.
+	Motu handles, extracts and transforms oceanographic huge volumes of data without performance collapse.</description>
+
+	<properties>
+
+		<!-- ANT git flow tag prefix - The git tag will be of the form motu-$version -->
+		<gitflow.tagprefix>motu</gitflow.tagprefix>
+
+		<!-- Common properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
+		<project.version.java>1.8</project.version.java>
+		<jdk.source.version>1.8</jdk.source.version>
+		<jdk.source.encoding>UTF-8</jdk.source.encoding>
+
+
+		<!-- Plugin versions -->
+		<plugin.version.compiler>3.2</plugin.version.compiler>
+
+		<spring.boot.version>1.5.9.RELEASE</spring.boot.version>
+		<swagger-core-version>1.5.15</swagger-core-version>
+		<avro.version>1.8.2</avro.version>
+		<okhttp.version>3.9.1</okhttp.version>
+	</properties>
+
+	<dependencies>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+
+
+			<dependency>
+				<groupId>cls.atoll.motu.client</groupId>
+				<artifactId>motuclient-java-tools</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+
+			<dependency>
+				<!-- IMPORTANT: KEEP THIS THE LAST DECLARED DEPENDENCY Import dependency 
+					management from Spring Boot -->
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>2.8.0</version>
+			</dependency>
+
+			<!-- swagger -->
+			<dependency>
+				<groupId>io.swagger</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>${swagger-core-version}</version>
+			</dependency>
+
+			<!-- geotoolkit -->
+			<dependency>
+				<groupId>org.geotoolkit</groupId>
+				<artifactId>geotk-client-csw</artifactId>
+				<version>4.0.4</version>
+			</dependency>
+
+			<!-- okhttp -->
+			<dependency>
+				<groupId>com.squareup.okhttp3</groupId>
+				<artifactId>okhttp</artifactId>
+				<version>${okhttp.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.okhttp3</groupId>
+				<artifactId>okhttp-urlconnection</artifactId>
+				<version>${okhttp.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.okhttp3</groupId>
+				<artifactId>logging-interceptor</artifactId>
+				<version>${okhttp.version}</version>
+			</dependency>
+
+			<!-- Other dependencies -->
+			<!-- xml -->
+			<dependency>
+				<groupId>xerces</groupId>
+				<artifactId>xercesImpl</artifactId>
+				<version>2.8.0</version>
+			</dependency>
+			<dependency>
+				<groupId>xalan</groupId>
+				<artifactId>xalan</artifactId>
+				<version>2.7.0</version>
+			</dependency>
+
+
+			<!-- jsoup -->
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>1.11.2</version>
+			</dependency>
+
+			<!-- immutables -->
+			<dependency>
+				<groupId>org.immutables</groupId>
+				<artifactId>value</artifactId>
+				<version>2.5.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.immutables</groupId>
+				<artifactId>serial</artifactId>
+				<version>2.5.6</version>
+			</dependency>
+			<!-- apache commons -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.7</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.6</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-net</groupId>
+				<artifactId>commons-net</artifactId>
+				<version>3.6</version>
+			</dependency>
+
+			<!-- guava -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>24.0-jre</version>
+			</dependency>
+
+			<!-- javax annotations -->
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>3.0.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sun.xml.ws</groupId>
+				<artifactId>jaxws-rt</artifactId>
+				<version>2.2.8</version>
+			</dependency>
+
+			<!-- MOTU -->
+			<dependency>
+				<groupId>cls.motu</groupId>
+				<artifactId>motu-api-message</artifactId>
+				<version>3.7.01</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<modules>
+		<module>../motuclient-java-tools</module>
+		<module>../motuclient-java</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-toolchains-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>toolchain</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<toolchains>
+						<jdk>
+							<version>${project.version.java}</version>
+							<vendor>sun</vendor>
+						</jdk>
+					</toolchains>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${plugin.version.compiler}</version>
+				<configuration>
+					<source>${project.version.java}</source>
+					<target>${project.version.java}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
+</project>
