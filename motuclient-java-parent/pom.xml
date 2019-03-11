@@ -169,12 +169,18 @@
 				<artifactId>jaxws-rt</artifactId>
 				<version>2.2.8</version>
 			</dependency>
+			<dependency>
+				<groupId>com.sun.istack</groupId>
+				<artifactId>istack-commons-runtime</artifactId>
+				<version>2.2</version>
+			</dependency>
+
 
 			<!-- MOTU -->
 			<dependency>
 				<groupId>cls.motu</groupId>
 				<artifactId>motu-api-message</artifactId>
-				<version>3.7.01</version>
+				<version>3.11.00-20181112.165118-6</version>
 			</dependency>
 
 		</dependencies>

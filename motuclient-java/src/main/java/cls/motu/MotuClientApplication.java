@@ -12,7 +12,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.core.util.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,7 @@ import cls.motu.exceptions.DownloadServiceException;
 import cls.motu.exceptions.DownloadServiceIrrecoverableException;
 import cls.motu.exceptions.DownloadServiceRecoverableException;
 import cls.motu.exceptions.MotuException;
+import cls.motu.exceptions.MotuUrlException;
 import cls.motu.objs.ImmutableMotuDownloadProductParameters;
 import cls.motu.objs.ImmutableMotuProductReference;
 import cls.motu.objs.MotuDownloadProductParameters;
@@ -67,60 +68,113 @@ public class MotuClientApplication implements CommandLineRunner {
         return motuClientProperties;
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        start(args);
+    private RemoteMotu buildMotuRemoteURI() throws MotuUrlException, URISyntaxException {
+        final URI motuUri = new URI(getMotuProperties().getUrl().toString());
+        RemoteMotu remoteMotu = MotuUrlsHelper.getRemoteMotuFromUri(motuUri, getMotuProperties().getUsername(), getMotuProperties().getPassword());
+        return remoteMotu;
     }
 
-    private void start(String[] args) {
+    private MotuProductReference buildMotuProductReference(String... args) {
+        String serviceName = "Mercator_Ocean_Model_Global-TDS";
+        String productName = "dataset-mercator-psy4v3-gl12-bestestimate-sshst";
+        if (args.length == 2) {
+            serviceName = args[0];
+            productName = args[1];
+        }
+
+        return ImmutableMotuProductReference.builder().service(serviceName).product(productName).build();
+    }
+
+    private MotuDownloadProductParameters buildMotuDownloadProductParametersForLastDay(MotuDescribeDatasetResponseParser describeProductResponse) {
+        return ImmutableMotuDownloadProductParameters.builder().addAllVariables(describeProductResponse.getVariablesStandardNames())
+                .lowestDepth(describeProductResponse.getAvailableDepthsAsSortedList().get(0))
+                .highestDepth(describeProductResponse.getAvailableDepthsAsSortedList().get(1)).
+
+                lowestLatitude(describeProductResponse.getLatBounds().getLeft()).highestLatitude(describeProductResponse.getLatBounds().getRight()).
+
+                lowestLongitude(describeProductResponse.getLonBounds().getLeft()).highestLongitude(describeProductResponse.getLonBounds().getRight()).
+
+                lowestTime(describeProductResponse.getTimeCoverage().getRight().minusSeconds(86400))
+                .highestTime(describeProductResponse.getTimeCoverage().getRight()).build();
+    }
+
+    @Override
+    public void run(String... args) {
+        MotuDescribeDatasetResponseParser describeProductResponse = null;
+        RemoteMotu remoteMotu = null;
         try {
-            final URI motuUri = new URI(getMotuProperties().getUrl().toString());
-            RemoteMotu remoteMotu = MotuUrlsHelper
-                    .getRemoteMotuFromUri(motuUri, getMotuProperties().getUsername(), getMotuProperties().getPassword());
-            MotuProductReference motuProductReference = ImmutableMotuProductReference.builder().service("Mercator_Ocean_Model_Global-TDS")
-                    .product("dataset-mercator-psy4v3-gl12-bestestimate-sshst").build();
-            MotuDescribeDatasetResponseParser describeProductResponse = describeProduct(remoteMotu, motuProductReference);
-
-            MotuDownloadProductParameters MotuDownloadProductParameters = ImmutableMotuDownloadProductParameters.builder()
-                    .addAllVariables(describeProductResponse.getVariablesStandardNames())
-                    .lowestDepth(describeProductResponse.getAvailableDepthsAsSortedList().get(0))
-                    .highestDepth(describeProductResponse.getAvailableDepthsAsSortedList().get(1)).
-
-                    lowestLatitude(describeProductResponse.getLatBounds().getLeft())
-                    .highestLatitude(describeProductResponse.getLatBounds().getRight()).
-
-                    lowestLongitude(describeProductResponse.getLonBounds().getLeft())
-                    .highestLongitude(describeProductResponse.getLonBounds().getRight()).
-
-                    lowestTime(describeProductResponse.getTimeCoverage().getLeft()).highestTime(describeProductResponse.getTimeCoverage().getRight())
-                    .build();
-            downloadProduct(remoteMotu, motuProductReference, MotuDownloadProductParameters);
-        } catch (MotuException e) {
-            log.error("describeDataset", e);
+            remoteMotu = buildMotuRemoteURI();
+        } catch (MotuUrlException e) {
+            log.error("MotuRemoteURI", e);
         } catch (URISyntaxException e) {
-            log.error(String.format("URI=%s describeDataset", getMotuProperties().getUrl().toString()), e);
+            log.error("MotuRemoteURI", e);
+        }
+
+        if (remoteMotu != null) {
+            log.info("");
+            // DescribeProduct
+            MotuProductReference motuProductReference = buildMotuProductReference(args);
+            try {
+                describeProductResponse = describeProduct(remoteMotu, motuProductReference);
+            } catch (MotuException e) {
+                log.error("describeDataset", e);
+            }
+
+            log.info("");
+            // GetSize
+            MotuDownloadProductParameters motuDownloadProductParameters = buildMotuDownloadProductParametersForLastDay(describeProductResponse);
+            try {
+                long resultSize = getProductSize(remoteMotu, motuProductReference, motuDownloadProductParameters);
+            } catch (MotuException e) {
+                log.error("downloadProduct", e);
+            }
+
+            log.info("");
+            // Download
+            try {
+                File result = downloadProduct(remoteMotu, motuProductReference, motuDownloadProductParameters);
+            } catch (MotuException e) {
+                log.error("downloadProduct", e);
+            }
         }
     }
 
     public MotuDescribeDatasetResponseParser describeProduct(RemoteMotu remoteMotu, MotuProductReference motuProductReference) throws MotuException {
+        log.info("MOTU START DescribeProduct: ");
         MotuDescribeDatasetResponseParser response = getMotuService().describeDataset(remoteMotu, motuProductReference);
         String jsonDescribeProduct = String.format("{variables:[%s], " + "lat:'%s', lon:'%s', time:'%s'" + "}",
                                                    String.join(", ", response.getVariablesStandardNames()),
                                                    response.getLatBounds().toString(),
                                                    response.getLonBounds().toString(),
                                                    response.getTimeCoverage().toString());
-        log.info("MOTU DescribeProduct: " + jsonDescribeProduct);
+        log.info("DescribeProduct JSON: " + jsonDescribeProduct);
+        log.info("MOTU END DescribeProduct: ");
         return response;
     }
 
-    public MotuRequestStatus downloadProduct(RemoteMotu remoteMotu,
-                                             MotuProductReference motuProductReference,
-                                             MotuDownloadProductParameters motuDownloadProductParameters)
+    public long getProductSize(RemoteMotu remoteMotu,
+                               MotuProductReference motuProductReference,
+                               MotuDownloadProductParameters motuDownloadProductParameters)
             throws MotuException {
+        log.info("MOTU START getProductSize: ");
+        log.info("Download request parameters: " + motuDownloadProductParameters.toString());
+        MotuRequestStatus response = getMotuService().getSize(remoteMotu, motuProductReference, motuDownloadProductParameters);
+        long sizeResponse = response.getSize();
+        log.info("Size JSON: {displaySize:'" + FileUtils.byteCountToDisplaySize(sizeResponse) + "', responseSize='" + sizeResponse + " B'}");
+        log.info("MOTU END getProductSize");
+        return sizeResponse;
+    }
+
+    public File downloadProduct(RemoteMotu remoteMotu,
+                                MotuProductReference motuProductReference,
+                                MotuDownloadProductParameters motuDownloadProductParameters)
+            throws MotuException {
+        log.info("MOTU START download");
         MotuRequestStatus response = getMotuService().sendDownloadProduct(remoteMotu, motuProductReference, motuDownloadProductParameters);
-        log.info("MOTU start download: "
+        log.info("Download request status: "
                 + String.format("{code:%s, message:'%s', requestId:%s}", response.getCode(), response.getMessage(), response.getRequestId()));
-        MotuRequestStatus terminalStatus;
+        MotuRequestStatus terminalStatus = null;
+        File tempLocation = null;
         try {
             terminalStatus = motuService.getRequestStatusUntilTerminalStateReached(remoteMotu,
                                                                                    motuProductReference,
@@ -130,12 +184,15 @@ public class MotuClientApplication implements CommandLineRunner {
             ResponseBody rbody = motuService.downloadExtractedProduct(remoteMotu, terminalStatus.getRemoteUri());
             CountingInputStream countingStream = new CountingInputStream(rbody.byteStream());
 
-            final File tempLocation = File.createTempFile("." + terminalStatus.getRequestId(), ".nc");
-            writeContentToTemporaryFile(countingStream, tempLocation);
+            tempLocation = File.createTempFile("." + terminalStatus.getRequestId(), ".nc");
+            long writtenBytes = writeContentToTemporaryFile(countingStream, tempLocation);
+            log.info("Download: {motuDownloadedFilePath:'" + tempLocation.getAbsolutePath() + "', displaySize:'"
+                    + FileUtils.byteCountToDisplaySize(writtenBytes) + "', responseSize='" + writtenBytes + " B'}");
+            log.info("MOTU END download");
 
-            log.info("MOTU end download: {motuDownloadedFilePath:'" + tempLocation.getAbsolutePath() + "'}");
+        } catch (
 
-        } catch (InterruptedException e) {
+        InterruptedException e) {
             log.error("downloadDataset", e);
         } catch (DownloadServiceException e) {
             log.error("downloadDataset", e);
@@ -143,7 +200,7 @@ public class MotuClientApplication implements CommandLineRunner {
             log.error("downloadDataset", e);
         }
 
-        return response;
+        return tempLocation;
     }
 
     private static final int BUFFER_SIZE = 1024 * 4;

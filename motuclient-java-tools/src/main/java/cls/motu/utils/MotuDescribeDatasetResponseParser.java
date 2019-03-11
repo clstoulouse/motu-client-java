@@ -178,8 +178,8 @@ public class MotuDescribeDatasetResponseParser {
         final Stream<Element> axisNodes = nodeStream
                 .flatMap(elemVars -> nodeListToStream(elemVars.getElementsByTagName(MotuConstants.XML_TAG_AXIS), Element.class));
         return axisNodes.filter(x -> Optional.ofNullable(x.getAttribute("axisType")).map(axisType::equals).orElse(false)).map(x -> {
-            final Optional<String> start = Optional.ofNullable(x.getAttribute("upper"));
-            final Optional<String> end = Optional.ofNullable(x.getAttribute("lower"));
+            final Optional<String> start = Optional.ofNullable(x.getAttribute("lower"));
+            final Optional<String> end = Optional.ofNullable(x.getAttribute("upper"));
 
             return Pair.of(start, end);
         }).findFirst().orElseGet(() -> Pair.of(null, null));

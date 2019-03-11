@@ -318,7 +318,7 @@ public class MotuService {
     private MotuRequestStatus buildMotuRequestStatus(final RequestSize statusResponse) {
         final Long size;
         if (null != statusResponse.getSize()) {
-            size = Math.round(statusResponse.getSize() * MEGABITS_TO_BYTES); // TODO unit can be different
+            size = Math.round(statusResponse.getSize() * 1024); // TODO unit can be different
         } else {
             size = null;
         }
