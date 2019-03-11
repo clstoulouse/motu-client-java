@@ -190,9 +190,7 @@ public class MotuClientApplication implements CommandLineRunner {
                     + FileUtils.byteCountToDisplaySize(writtenBytes) + "', responseSize='" + writtenBytes + " B'}");
             log.info("MOTU END download");
 
-        } catch (
-
-        InterruptedException e) {
+        } catch (InterruptedException e) {
             log.error("downloadDataset", e);
         } catch (DownloadServiceException e) {
             log.error("downloadDataset", e);
