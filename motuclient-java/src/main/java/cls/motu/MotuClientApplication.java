@@ -191,11 +191,11 @@ public class MotuClientApplication implements CommandLineRunner {
             log.info("MOTU END download");
 
         } catch (InterruptedException e) {
-            log.error("downloadDataset", e);
+            log.error("downloadProduct", e);
         } catch (DownloadServiceException e) {
-            log.error("downloadDataset", e);
+            log.error("downloadProduct", e);
         } catch (IOException e) {
-            log.error("downloadDataset", e);
+            log.error("downloadProduct", e);
         }
 
         return tempLocation;
