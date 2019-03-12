@@ -3,6 +3,7 @@ package cls.motu.exceptions;
 /**
  * Base unchecked exception raised in this module.
  */
+@SuppressWarnings("serial")
 public class MotuRuntimeException extends RuntimeException {
 
     /**

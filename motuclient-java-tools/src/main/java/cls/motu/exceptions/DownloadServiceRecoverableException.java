@@ -3,6 +3,7 @@ package cls.motu.exceptions;
 /**
  * Exception raised by a download service for a recoverable error (when a retry could solve the issue).
  */
+@SuppressWarnings("serial")
 public class DownloadServiceRecoverableException extends DownloadServiceException {
     /**
      * Constructs a new exception with {@code null} as its detail message. The cause is not initialized, and

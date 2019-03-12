@@ -255,7 +255,7 @@ public class MotuService {
      * @param password CAS password to use when CAS authentication is required.
      * @return Response of the HTTP call to MOTU.
      */
-    private Response callBehindCas(final OkHttpClient client, final URI uri, final String username, final String password)
+    private Response callBehindCas(final OkHttpClient httpClient, final URI uri, final String username, final String password)
             throws MotuHttpStatusCodeException, MotuResponseParsingException, MotuIOException, MotuUrlException, MotuAuthenticationException {
         final Request request;
         try {
@@ -264,7 +264,7 @@ public class MotuService {
         } catch (final MalformedURLException ex) {
             throw new MotuUrlException(ex);
         }
-        return callBehindCas(client, request, username, password);
+        return callBehindCas(httpClient, request, username, password);
     }
 
     /**
@@ -281,10 +281,10 @@ public class MotuService {
      * @throws MotuResponseParsingException When MOTU response could not be parsed.
      * @throws MotuAuthenticationException When CAS login could not be performed correctly.
      */
-    private Response callBehindCas(final OkHttpClient client, final Request request, final String username, final String password)
+    private Response callBehindCas(final OkHttpClient httpClient, final Request request, final String username, final String password)
             throws MotuHttpStatusCodeException, MotuResponseParsingException, MotuIOException, MotuAuthenticationException {
         try {
-            final Response initialResponse = client.newCall(request).execute();
+            final Response initialResponse = httpClient.newCall(request).execute();
             final Response finalResponse;
             if (MotuHttpHelper.checkIfCasLoginForm(initialResponse)) {
                 log.debug("detected CAS login redirection in response to '{}'", request.url());
@@ -301,7 +301,7 @@ public class MotuService {
                             .buildLoginRequest(httpUrl, stringContent, this.motuProperties.getCasLoginFormSelector(), username, password);
 
                     log.debug("CAS login attempt to endpoint '{}'...", casifiedRequest.url());
-                    finalResponse = client.newCall(casifiedRequest).execute();
+                    finalResponse = httpClient.newCall(casifiedRequest).execute();
                 } finally {
                     initialResponse.close();
                 }
@@ -318,7 +318,7 @@ public class MotuService {
     private MotuRequestStatus buildMotuRequestStatus(final RequestSize statusResponse) {
         final Long size;
         if (null != statusResponse.getSize()) {
-            size = Math.round(statusResponse.getSize() * 1024); // TODO unit can be different
+            size = Math.round(statusResponse.getSize() * 1024);
         } else {
             size = null;
         }

@@ -3,6 +3,7 @@ package cls.motu.exceptions;
 /**
  * Base checked exception in the download service.
  */
+@SuppressWarnings("serial")
 public class DownloadServiceException extends Exception {
     /**
      * Constructs a new exception with {@code null} as its detail message. The cause is not initialized, and

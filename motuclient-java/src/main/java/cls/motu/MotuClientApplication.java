@@ -100,7 +100,6 @@ public class MotuClientApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        MotuDescribeDatasetResponseParser describeProductResponse = null;
         RemoteMotu remoteMotu = null;
         try {
             remoteMotu = buildMotuRemoteURI();
@@ -111,6 +110,7 @@ public class MotuClientApplication implements CommandLineRunner {
         }
 
         if (remoteMotu != null) {
+            MotuDescribeDatasetResponseParser describeProductResponse = null;
             log.info("");
             // DescribeProduct
             MotuProductReference motuProductReference = buildMotuProductReference(args);
@@ -136,11 +136,13 @@ public class MotuClientApplication implements CommandLineRunner {
             } catch (MotuException e) {
                 log.error("downloadProduct", e);
             }
+
+            log.info("");
         }
     }
 
     public MotuDescribeDatasetResponseParser describeProduct(RemoteMotu remoteMotu, MotuProductReference motuProductReference) throws MotuException {
-        log.info("MOTU START DescribeProduct: ");
+        log.info("MOTU START DescribeProduct");
         MotuDescribeDatasetResponseParser response = getMotuService().describeDataset(remoteMotu, motuProductReference);
         String jsonDescribeProduct = String.format("{variables:[%s], " + "lat:'%s', lon:'%s', time:'%s'" + "}",
                                                    String.join(", ", response.getVariablesStandardNames()),
@@ -148,7 +150,7 @@ public class MotuClientApplication implements CommandLineRunner {
                                                    response.getLonBounds().toString(),
                                                    response.getTimeCoverage().toString());
         log.info("DescribeProduct JSON: " + jsonDescribeProduct);
-        log.info("MOTU END DescribeProduct: ");
+        log.info("MOTU END DescribeProduct");
         return response;
     }
 
@@ -156,7 +158,7 @@ public class MotuClientApplication implements CommandLineRunner {
                                MotuProductReference motuProductReference,
                                MotuDownloadProductParameters motuDownloadProductParameters)
             throws MotuException {
-        log.info("MOTU START getProductSize: ");
+        log.info("MOTU START getProductSize");
         log.info("Download request parameters: " + motuDownloadProductParameters.toString());
         MotuRequestStatus response = getMotuService().getSize(remoteMotu, motuProductReference, motuDownloadProductParameters);
         long sizeResponse = response.getSize();
@@ -201,13 +203,11 @@ public class MotuClientApplication implements CommandLineRunner {
         return tempLocation;
     }
 
-    private static final int BUFFER_SIZE = 1024 * 4;
-
     private long writeContentToTemporaryFile(final InputStream inputStream, final File tempLocation) throws InterruptedException, IOException {
         log.debug("writing the content to temporary location '%s'...", tempLocation);
         long writtenBytes = 0L;
         try (final OutputStream outputStream = FileUtils.openOutputStream(tempLocation)) {
-            final byte[] buffer = new byte[BUFFER_SIZE];
+            final byte[] buffer = new byte[4096];
             int n;
             while (!Thread.currentThread().isInterrupted() && IOUtils.EOF != (n = inputStream.read(buffer))) {
                 outputStream.write(buffer, 0, n);

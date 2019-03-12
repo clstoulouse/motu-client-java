@@ -3,6 +3,7 @@ package cls.motu.exceptions;
 /**
  * Base exception raised when an error occurs during the interaction with a remote MOTU server.
  */
+@SuppressWarnings("serial")
 public class MotuException extends Exception {
 
     /**
