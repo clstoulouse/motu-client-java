@@ -16,11 +16,6 @@
 	<description>A Motu client Java API</description>
 
     <dependencies>
-        <!-- internal 
-        <dependency>
-            <groupId>dias.cls</groupId>
-            <artifactId>dias-core-services-common</artifactId>
-        </dependency>-->
         <!-- guava -->
         <dependency>
             <groupId>com.google.guava</groupId>

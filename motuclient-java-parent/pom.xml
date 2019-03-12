@@ -3,13 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+<!--  
 	<parent>
 		<artifactId>cls-project-config</artifactId>
 		<groupId>cls.commons</groupId>
 		<version>1.2.00</version>
 	</parent>
- 
+ -->
 	<groupId>cls.atoll.motu.client</groupId>
 	<artifactId>motuclient-java-parent</artifactId>
 	<name>Motuclient Java Parent</name>

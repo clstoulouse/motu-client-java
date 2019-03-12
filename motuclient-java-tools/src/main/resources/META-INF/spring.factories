@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cls.motu.MotuToolsAutoConfiguration
+cls.atoll.motu.MotuToolsAutoConfiguration
