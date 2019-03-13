@@ -34,7 +34,7 @@ import cls.atoll.motu.objs.MotuDownloadProductParameters;
 import cls.atoll.motu.objs.MotuProductReference;
 import cls.atoll.motu.objs.MotuRequestStatus;
 import cls.atoll.motu.objs.RemoteMotu;
-import cls.atoll.motu.properties.MotuClientProperties;
+import cls.atoll.motu.properties.MotuClientConnectionProperties;
 import cls.atoll.motu.services.MotuService;
 import cls.atoll.motu.utils.MotuDescribeDatasetResponseParser;
 import cls.atoll.motu.utils.MotuUrlsHelper;
@@ -57,20 +57,21 @@ import okhttp3.ResponseBody;
 public class MotuClientApplication implements CommandLineRunner {
 
     private MotuService motuService;
-    private MotuClientProperties motuClientProperties;
+    private MotuClientConnectionProperties motuClientConnectionProperties;
     private static final Logger log = LoggerFactory.getLogger(MotuService.class);
 
     public MotuService getMotuService() {
         return motuService;
     }
 
-    public MotuClientProperties getMotuProperties() {
-        return motuClientProperties;
+    public MotuClientConnectionProperties getMotuClientConnectionProperties() {
+        return motuClientConnectionProperties;
     }
 
     private RemoteMotu buildMotuRemoteURI() throws MotuUrlException, URISyntaxException {
-        final URI motuUri = new URI(getMotuProperties().getUrl().toString());
-        RemoteMotu remoteMotu = MotuUrlsHelper.getRemoteMotuFromUri(motuUri, getMotuProperties().getUsername(), getMotuProperties().getPassword());
+        final URI motuUri = new URI(getMotuClientConnectionProperties().getUrl().toString());
+        RemoteMotu remoteMotu = MotuUrlsHelper
+                .getRemoteMotuFromUri(motuUri, getMotuClientConnectionProperties().getUsername(), getMotuClientConnectionProperties().getPassword());
         return remoteMotu;
     }
 
@@ -246,8 +247,8 @@ public class MotuClientApplication implements CommandLineRunner {
 
     // DI Setters
     @Autowired
-    public void setMotuClientProperties(final MotuClientProperties motuClientProperties_) {
-        this.motuClientProperties = motuClientProperties_;
+    public void setMotuClientConnectionProperties(final MotuClientConnectionProperties motuClientProperties_) {
+        this.motuClientConnectionProperties = motuClientProperties_;
     }
 
     @Autowired

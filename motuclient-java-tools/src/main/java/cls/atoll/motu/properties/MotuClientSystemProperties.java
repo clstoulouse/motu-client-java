@@ -5,9 +5,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @ConfigurationProperties("motu")
-@PropertySource("classpath:/motu.properties")
+@PropertySource("classpath:/motuClientSystem.properties")
 @Component
-public class MotuProperties {
+public class MotuClientSystemProperties {
     private int connectTimeoutSeconds = 10;
     private int readTimeoutSeconds = 10;
     private String casLoginFormSelector = "#authentification";
