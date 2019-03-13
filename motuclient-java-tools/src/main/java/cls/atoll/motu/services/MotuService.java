@@ -29,7 +29,7 @@ import cls.atoll.motu.objs.MotuDownloadProductParameters;
 import cls.atoll.motu.objs.MotuProductReference;
 import cls.atoll.motu.objs.MotuRequestStatus;
 import cls.atoll.motu.objs.RemoteMotu;
-import cls.atoll.motu.properties.MotuProperties;
+import cls.atoll.motu.properties.MotuClientSystemProperties;
 import cls.atoll.motu.services.unmarshalling.MotuUnmarshallerPool;
 import cls.atoll.motu.utils.MotuDescribeDatasetResponseParser;
 import cls.atoll.motu.utils.MotuHttpHelper;
@@ -52,12 +52,12 @@ public class MotuService {
 
     private static final long MEGABITS_TO_BYTES = 125000L;
 
-    private final MotuProperties motuProperties;
+    private final MotuClientSystemProperties motuProperties;
     private final OkHttpClient client;
     private final MotuUnmarshallerPool motuUnmarshallerPool;
 
     @Autowired
-    public MotuService(final MotuProperties motuProperties, final MotuUnmarshallerPool motuUnmarshallerPool) {
+    public MotuService(final MotuClientSystemProperties motuProperties, final MotuUnmarshallerPool motuUnmarshallerPool) {
         this.motuProperties = motuProperties;
         this.motuUnmarshallerPool = motuUnmarshallerPool;
 
