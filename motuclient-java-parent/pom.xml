@@ -13,7 +13,7 @@
 	<groupId>cls.atoll.motu.client</groupId>
 	<artifactId>motuclient-java-parent</artifactId>
 	<name>Motuclient Java Parent</name>
-	<version>0.1.01-SNAPSHOT</version>
+	<version>0.2.00-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<description>Motu is a high efficient and robust Web Server which fills the gap between heterogeneous Data Providers to End Users.
