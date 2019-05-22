@@ -57,6 +57,7 @@ This creates Jar archives in the target folder:
 You must use Java version 1.8 or later.  
 
 ## <a name="InstallationMaven">Using Maven</a>
+Add in your pom.xml the following maven dependency:  
 ```  
 <dependency>  
   <groupId>cls.atoll.motu.client</groupId>  
@@ -64,23 +65,40 @@ You must use Java version 1.8 or later.
   <version>${project.version}</version>  
 </dependency>  
 ```  
-  
 
+# <a name="IntegrationExamples">Integration examples</a> 
+## <a name="IntegrationExamplesNonSpring">Out of a Java spring projects</a> 
+See source code:   
+* /motuclient-java-non-spring/src/main/java/cls/motu/MotuClientNonSpringApplication.java
+* /motuclient-java-non-spring/src/main/resources/spring-context.xml
+
+## <a name="IntegrationExamplesInSpring">In a Java spring project</a> 
+See source code:   
+* /motuclient-java/src/main/java/cls/motu/MotuClientApplication.java
 
 # <a name="API">API</a>  
 ## <a name="APISpring">Using Spring API</a>  
+See source code:   
+* /motuclient-java/src/main/java/cls/motu/MotuClientApplication.java
+
+
 
 # <a name="APIExamples">API examples</a>   
 
-
 ## <a name="APIExamplesDownload">Download</a>  
-See source code: /motuclient-java/src/main/java/cls/motu/MotuClientApplication.java
+See source code:   
+* /motuclient-java/src/main/java/cls/motu/MotuClientApplication.java
 
 ## <a name="APIExamplesGetSize">GetSize</a>  
-See source code: /motuclient-java/src/main/java/cls/motu/MotuClientApplication.java
+See source code:   
+* /motuclient-java/src/main/java/cls/motu/MotuClientApplication.java
 
 ## <a name="APIExamplesDescribeProduct">DescribeProduct</a>  
-See source code: /motuclient-java/src/main/java/cls/motu/MotuClientApplication.java
+See source code:   
+* /motuclient-java/src/main/java/cls/motu/MotuClientApplication.java
+
+
+
 
 # <a name="Licence">Licence</a> 
 This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.  

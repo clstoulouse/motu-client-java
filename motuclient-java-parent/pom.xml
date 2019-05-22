@@ -189,6 +189,7 @@
 	<modules>
 		<module>../motuclient-java-tools</module>
 		<module>../motuclient-java</module>
+		<module>../motuclient-java-non-spring</module>
 	</modules>
 
 	<build>
