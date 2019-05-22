@@ -70,6 +70,11 @@ Add in your pom.xml the following maven dependency:
 ```  
 
 # <a name="IntegrationExamples">Integration examples</a> 
+
+Note that in all the examples, the Motu connection settings (server url, username and password) are defined as environment variables as declared in the file  
+/motuclient-java-tools/src/main/resources/motuClientConnection.properties.  
+You can set them using these environement variables (MOTU_USERNAME, MOTU_PASSWORD, MOTU_URL) or use the MotuClientConnectionProperties class to set them.  
+
 ## <a name="IntegrationExamplesNonSpring">Out of a Java spring projects</a> 
 See source code:   
 * /motuclient-java-non-spring/src/main/java/cls/motu/MotuClientNonSpringApplication.java
