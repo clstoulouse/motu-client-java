@@ -2,3 +2,4 @@
 /motu-api-rest/target
 /motuclient-java-tools/target
 /motuclient-java/target
+.sonar
