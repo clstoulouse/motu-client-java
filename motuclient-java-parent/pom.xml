@@ -39,6 +39,9 @@
 		<swagger-core-version>1.5.15</swagger-core-version>
 		<avro.version>1.8.2</avro.version>
 		<okhttp.version>3.9.1</okhttp.version>
+		
+		<!-- MOTU -->
+		<cls.motu.motu-api-message.version>3.11.02</cls.motu.motu-api-message.version>
 	</properties>
 
 	<dependencies>
@@ -47,13 +50,18 @@
 	<dependencyManagement>
 		<dependencies>
 
-
 			<dependency>
 				<groupId>cls.atoll.motu.client</groupId>
 				<artifactId>motuclient-java-tools</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
+			
+			<dependency>
+				<groupId>cls.motu</groupId>
+				<artifactId>motu-api-message</artifactId>
+				<version>${cls.motu.motu-api-message.version}</version>
+			</dependency>
 
 			<dependency>
 				<!-- IMPORTANT: KEEP THIS THE LAST DECLARED DEPENDENCY Import dependency 
@@ -173,14 +181,6 @@
 				<groupId>com.sun.istack</groupId>
 				<artifactId>istack-commons-runtime</artifactId>
 				<version>2.2</version>
-			</dependency>
-
-
-			<!-- MOTU -->
-			<dependency>
-				<groupId>cls.motu</groupId>
-				<artifactId>motu-api-message</artifactId>
-				<version>3.11.00-20181112.165118-6</version>
 			</dependency>
 
 		</dependencies>
